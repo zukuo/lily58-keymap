@@ -1,3 +1,4 @@
+#include <string.h>
 #include QMK_KEYBOARD_H
 
 enum layer_number {
@@ -101,6 +102,33 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
 
+char os[10] = "";
+
+bool process_detected_host_os_kb(os_variant_t detected_os) {
+    if (!process_detected_host_os_user(detected_os)) {
+        return false;
+    }
+    switch (detected_os) {
+        case OS_MACOS:
+            strcpy(os, "MacOS");
+            break;
+        case OS_IOS:
+            strcpy(os, "IOS");
+            break;
+        case OS_WINDOWS:
+            strcpy(os, "Windows");
+            break;
+        case OS_LINUX:
+            strcpy(os, "Linux");
+            break;
+        case OS_UNSURE:
+            strcpy(os, "");
+            break;
+    }
+
+    return true;
+}
+
 //SSD1306 OLED update loop, make sure to enable OLED_ENABLE=yes in rules.mk
 #ifdef OLED_ENABLE
 
@@ -127,6 +155,7 @@ bool oled_task_user(void) {
     // If you want to change the display of OLED, you need to change here
     oled_write_ln(read_layer_state(), false);
     oled_write_ln("Zukuo's Lily58", false);
+    oled_write_ln(os, false);
     //oled_write_ln(read_mode_icon(keymap_config.swap_lalt_lgui), false);
     //oled_write_ln(read_host_led_state(), false);
     //oled_write_ln(read_timelog(), false);
@@ -137,12 +166,3 @@ bool oled_task_user(void) {
 }
 #endif // OLED_ENABLE
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  if (record->event.pressed) {
-#ifdef OLED_ENABLE
-    set_keylog(keycode, record);
-#endif
-    // set_timelog();
-  }
-  return true;
-}
