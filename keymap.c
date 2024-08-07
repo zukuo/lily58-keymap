@@ -133,8 +133,11 @@ bool process_detected_host_os_kb(os_variant_t detected_os) {
 #ifdef OLED_ENABLE
 
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-  if (!is_keyboard_master())
-    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+  if (!is_keyboard_master()) {
+      return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+  } else {
+      return OLED_ROTATION_270;
+  }
   return rotation;
 }
 
@@ -145,24 +148,59 @@ void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
 const char *read_keylogs(void);
 
-// const char *read_mode_icon(bool swap);
-// const char *read_host_led_state(void);
-// void set_timelog(void);
-// const char *read_timelog(void);
+// Handwritten zukuo
+/* static void render_logo(void) { */
+/*     static const char PROGMEM qmk_logo[] = { */
+/*         0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,192, 64,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  8, 48,224,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128, 96,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128, 64, 48, 16, 16, 16, 16, 16, 16, 32, 32, 64, 64,128,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, */
+/*         0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128, 64, 64, 32, 16,  8,  4,  2,  1,  0,  0,  0,  0,  0,  0,  0,  0,124,128,  0,  0,  0,  0,  0,  0,  0,255, 15, 48,192,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,252,  0,  0,  0,192,112,142,129,  0,  0,  0,  0,  0,  0,  0,254,  0,  0,  0,  0,  0,  0,  7, 31,248,128,  0,  0,  0,  0,  0,  0,  0, 30,  1,  0,  0,  0,  0,  0,  0,192,  0,  0,  0,  0,  0,  0,  0,  1,  2,  2,  4,  8, 48,192,  0,  0,  0,  0,  0,  0,  0, */
+/*         0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,128,224,176,152,132,130,130,129, 64, 64, 64, 64, 64, 64, 32, 32, 32, 32, 32, 32, 32, 32, 16,  0,  0,  7, 24, 16, 32, 32, 16, 16, 15,  0,  0,  0,  0,  3, 28, 32, 32, 64, 64,  0,  0,  0,  0,  0,  0,127, 32, 28,  3,  0,  0,  0,  0,  1,  2,  4,  4,  0,  0,  0,  1, 30, 96,128,  0,  0,  0,128,128,127,  7, 24, 32, 32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  3,  4,  8, 16, 16, 32, 64, 64, 64, 64,128,128, 64, 32, 24,  7,  0,  0,  0,  0,  0,  0, */
+/*         0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, */
+/*     }; */
+
+/*     oled_write_raw_P(qmk_logo, sizeof(qmk_logo)); */
+/* } */
+
+// Moving Car Logo
+static void render_logo(void) {
+    static const char PROGMEM raw_logo[] = {
+        0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,254,254,  6,  6,230,230,248,248,248,248,102,102,254,254,  6,  6,  6,  6,  6,  6,  6,  6,248,248,248,248,248,248, 24, 24, 24, 24,120,120, 96, 96,224,224,128,128,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,255,255,120,120, 25, 25,  7,  7, 31, 31, 30, 30,159,159,128,128,152,152,152,152,120,120,127,127,103,103,  7,  7,  0,  0,  0,  0, 24, 24, 24, 24,  1,  1,255,255,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0, 31, 31,120,120,126,126,102,102,126,126,120,120,127,127,127,127,127,127,121,121,120,120,120,120,120,120,126,126,102,102,126,126,120,120,120,120,126,126, 31, 31,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,
+    };
+    oled_write_raw_P(raw_logo, sizeof(raw_logo));
+}
 
 bool oled_task_user(void) {
-  if (is_keyboard_master()) {
-    // If you want to change the display of OLED, you need to change here
-    oled_write_ln(read_layer_state(), false);
-    oled_write_ln("Zukuo's Lily58", false);
-    oled_write_ln(os, false);
-    //oled_write_ln(read_mode_icon(keymap_config.swap_lalt_lgui), false);
-    //oled_write_ln(read_host_led_state(), false);
-    //oled_write_ln(read_timelog(), false);
-  } else {
-    oled_write(read_logo(), false);
-  }
+    if (is_keyboard_master()) {
+
+        switch (get_highest_layer(layer_state)) {
+            case 3:
+                oled_write("ADJ", false);
+                oled_write_ln("\n", false);
+                break;
+            case 2:
+                oled_write("RAISE\n", false);
+                break;
+                // Layer 1
+            case 1:
+                oled_write("LOWER\n", false);
+                break;
+                // Layer 0
+            default:
+                oled_write("BASE", false);
+                oled_write_ln("\n", false);
+                break;
+        }
+
+        oled_write_ln("OS:", false);
+        oled_write_ln(os, false);
+
+    } else {
+        render_logo();
+        oled_scroll_right();
+    }
     return false;
 }
 #endif // OLED_ENABLE
-
